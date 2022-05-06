@@ -107,26 +107,6 @@ class FlexPayClient(
         return generateUrl(brand.FLEXPAY_PATH, UrlType.PURCHASE, purchaseParams)
     }
 
-    private fun MutableParamsMap.setCommonParams(
-        paymentMethod: PaymentMethod?,
-        referenceID: String?,
-        custom1: String?,
-        custom2: String?,
-        custom3: String?,
-        backURL: String?,
-        declineURL: String?,
-        email: String?,
-    ) {
-        putIfNotNull("paymentMethod", paymentMethod?.name)
-        putIfNotNull("referenceID", referenceID)
-        putIfNotNull("custom1", custom1)
-        putIfNotNull("custom2", custom2)
-        putIfNotNull("custom3", custom3)
-        putIfNotNull("backURL", backURL)
-        putIfNotNull("declineURL", declineURL)
-        putIfNotNull("email", email)
-    }
-
     /**
      * Provides URL where a buyer can pay the initial amount and subscribe to payments for given service
      *
@@ -239,7 +219,7 @@ class FlexPayClient(
     )
 
     /**
-     * Validates signature of e.g. a FlexPay postback
+     * Validates signature of e.g. a FlexPay postback to make sure the data is authentic
      * @param params Only params involved in FlexPay signature calculation
      */
     fun validateSignature(params: ParamsMap): Boolean {
@@ -348,3 +328,23 @@ fun MutableParamsMap.putIfNotNull(key: String, value: String?) {
 fun String.encodeUrlValue() = encode(this, Charsets.UTF_8)
 
 class FlexPayException(message: String) : Throwable(message)
+
+private fun MutableParamsMap.setCommonParams(
+    paymentMethod: PaymentMethod?,
+    referenceID: String?,
+    custom1: String?,
+    custom2: String?,
+    custom3: String?,
+    backURL: String?,
+    declineURL: String?,
+    email: String?,
+) {
+    putIfNotNull("paymentMethod", paymentMethod?.name)
+    putIfNotNull("referenceID", referenceID)
+    putIfNotNull("custom1", custom1)
+    putIfNotNull("custom2", custom2)
+    putIfNotNull("custom3", custom3)
+    putIfNotNull("backURL", backURL)
+    putIfNotNull("declineURL", declineURL)
+    putIfNotNull("email", email)
+}
