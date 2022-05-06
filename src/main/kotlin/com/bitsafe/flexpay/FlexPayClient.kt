@@ -31,6 +31,11 @@ class FlexPayClient(
     private val signatureKey: String,
     val brand: Brand = Brand.VEROTEL,
 ) {
+    constructor(
+        websiteId: Int,
+        signatureKey: String,
+        brand: Brand = Brand.VEROTEL,
+    ) : this(websiteId.toString(), signatureKey, brand)
 
     init {
         if (signatureKey.isEmpty()) {
