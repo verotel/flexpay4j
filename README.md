@@ -1,6 +1,6 @@
 # FlexPay4J
 
-This library allows you, as a verotel/CardBilling/GayCharge merchant to easily
+This library allows you, as a Verotel/CardBilling/GayCharge merchant to easily
 **perform payments** - both single purchases and subscriptions.
 
 ## FlexPay

@@ -61,14 +61,14 @@ internal class FlexPayClientTest {
     }
 
     @Test
-    fun `validate signature returns true if correct`() {
+    fun `validates signature as correct`() {
         val signedParams = params + mapOf("signature" to signatureOfAll.uppercase())
 
         assertThat(client.validateSignature(signedParams)).isTrue
     }
 
     @Test
-    fun `validate signature returns true for old sha1 signature`() {
+    fun `validates signature as correct for old sha1 signature`() {
         val signedParams = params + mapOf("signature" to oldSha1SignatureOfAll.uppercase())
 
         assertThat(client.validateSignature(signedParams)).isTrue
