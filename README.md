@@ -13,6 +13,8 @@ This library makes it easier to use this protocol:
 
 ## Usage
 
+(library has not been published yet, so this won't work yet)
+
 ```kotlin
 implementation("com.verotel.flexpay:flexpay4j")
 ```
