@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.6.20"
-    java
+    `java-library`
+    `maven-publish`
 }
 
 group = "com.verotel"
@@ -25,4 +27,18 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("library") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "flexpay4j"
+            url = URI("https://github.com/verotel/flexpay4j.git")
+        }
+    }
 }
