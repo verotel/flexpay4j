@@ -181,7 +181,7 @@ class FlexPayClient(
     /**
      * Provides URL with machine-readable information about the given sale
      * Obtained via sale ID
-     * Data is provided in YML format
+     * Data is provided in YAML format
      */
     fun getStatusUrlBySale(saleID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
@@ -195,7 +195,7 @@ class FlexPayClient(
     /**
      * Provides URL with machine-readable information about the given sale
      * Obtained via sale reference ID
-     * Data is provided in YML format
+     * Data is provided in YAML format
      */
     fun getStatusUrlByReference(referenceID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
@@ -207,25 +207,88 @@ class FlexPayClient(
     }
 
     /**
-     * TODO: specify params explicitly
+     * Provides URL where a buyer can pay the initial amount and subscribe to payments for given service
+     *
+     * @param precedingSaleID Identificator of sale the buyer is upgrading from
+     * @param period Duration in ISO8601 format, for example: P30D, minimum is 7 days for recurring and 2 days for on-time
+     * @param subscriptionType one-time or recurring
+     *          NOTE: DDEU only supports one-time
+     * @param trialAmount amount to be processed in nnn.nn format for the initial trial period, minimum is 2 days
+     * @param trialPeriod amount to be processed in nnn.nn format for the initial trial period, minimum is 2 days
+     * @param description description of the product. Text is displayed on the order page - max 100 printable characters
+     * @param priceAmount amount to be processed in nnn.nn format
+     * @param priceCurrency priceCurrency 3 char ISO code, must be one of the Sale currencies (USD EUR GBP AUD CAD CHF DKK NOK SEK)
+     *          NOTE: only EUR is can be used for DDEU payment method system
+     * @param paymentMethod payment method, CC or DDEU (if not set then buyers can choose from available payment methods)
+     *          NOTE: DDEU is available only in DE, AT, CH, BE, IT, NL, ES and FR
+     *          If oneClickToken is sent, the payment method must be set to CC
+     * @param custom1 pass-through variable - max 255 printable characters
+     * @param custom2 pass-through variable - max 255 printable characters
+     * @param custom3 pass-through variable - max 255 printable characters
+     * @param backURL URL for redirect after successful transaction - max 255 characters
+     * @param email email of the buyer. If not set, it will be collected on the Order Page
+     *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
+     * @param version version of the FlexPay call
      */
-    fun getUpgradeSubscriptionUrl(params: ParamsMap): URL = generateUrl(
-        brand.FLEXPAY_PATH, UrlType.UPGRADESUBSCRIPTION, params
+    fun getUpgradeSubscriptionUrl(
+        precedingSaleID: String,
+        period: String,
+        subscriptionType: SubscriptionType,
+        trialAmount: BigDecimal? = null,
+        trialPeriod: String? = null,
+        description: String? = null,
+        priceAmount: BigDecimal,
+        priceCurrency: SaleCurrency,
+        paymentMethod: PaymentMethod? = null,
+        custom1: String? = null,
+        custom2: String? = null,
+        custom3: String? = null,
+        backURL: String? = null,
+        email: String? = null,
+        version: String = FLEXPAY_VERSION
+    ): URL {
+        val upgradeParams = mutableMapOf(
+            "precedingSaleID" to precedingSaleID,
+            "version" to version,
+            "priceAmount" to priceAmount.toPlainString(),
+            "priceCurrency" to priceCurrency.name,
+            "type" to "subscription",
+            "subscriptionType" to subscriptionType.name,
+            "period" to period,
+        )
+
+        upgradeParams.putIfNotNull("name", description)
+        upgradeParams.putIfNotNull("trialAmount", trialAmount?.toPlainString())
+        upgradeParams.putIfNotNull("trialPeriod", trialPeriod)
+        upgradeParams.putIfNotNull("paymentMethod", paymentMethod?.name)
+        upgradeParams.putIfNotNull("custom1", custom1)
+        upgradeParams.putIfNotNull("custom2", custom2)
+        upgradeParams.putIfNotNull("custom3", custom3)
+        upgradeParams.putIfNotNull("backURL", backURL)
+        upgradeParams.putIfNotNull("email", email)
+
+        return generateUrl(brand.FLEXPAY_PATH, UrlType.UPGRADESUBSCRIPTION, upgradeParams)
+    }
+
+    /**
+     * To allow your subscribers to cancel their subscriptions on your website
+     * you can now generate a subscription specific cancel URL.
+     *
+     * @param saleID Verotel saleID identifier
+     */
+    fun getCancelSubscriptionUrl(saleID: String): URL = generateUrl(
+        brand.CANCEL_PATH, UrlType.CANCEL_SUBSCRIPTION, mapOf("saleID" to saleID)
     )
 
     /**
-     * TODO: specify params explicitly
+     * Validates signature of a FlexPay postback to make sure the data is authentic
+     * After every sale or transaction based action a corresponding postback is sent to the registered Postback URL.
+     * Postback data are sent as GET request.
+     *
+     * @param urlParams GET params received in postback.
      */
-    fun getCancelSubscriptionUrl(params: ParamsMap): URL = generateUrl(
-        brand.CANCEL_PATH, UrlType.CANCEL_SUBSCRIPTION, params
-    )
-
-    /**
-     * Validates signature of e.g. a FlexPay postback to make sure the data is authentic
-     * @param params Only params involved in FlexPay signature calculation
-     */
-    fun validateSignature(params: ParamsMap): Boolean {
-        val workingParams = params.toMutableMap()
+    fun validateSignature(urlParams: ParamsMap): Boolean {
+        val workingParams = urlParams.toMutableMap()
         val inputSignature = workingParams.remove("signature")?.lowercase()
         val generatedSignature = signature(workingParams)
         val generatedOldSignature = signature(workingParams, "sha1")
@@ -235,7 +298,10 @@ class FlexPayClient(
     }
 
     /**
-     * Generates SHA256 signature for FlexPay params given (non-FlexPay params are ignored)
+     * Generates signature of FlexPay params given (non-FlexPay params are ignored)
+     *
+     * @param params Simple key-value map of params to be signed
+     *
      * @return String FlexPay signature (HEX encoded SHA256 of FlexPay secret and FlexPay params)
      */
     fun getSignature(params: ParamsMap): String {

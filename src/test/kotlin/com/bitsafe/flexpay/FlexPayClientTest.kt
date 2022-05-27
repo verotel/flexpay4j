@@ -48,7 +48,7 @@ internal class FlexPayClientTest {
         append("&referenceID=reference1234")
         append("&saleID=433456")
         append("&shopID=68849")
-        append("&subscriptionType=RECURRING")
+        append("&subscriptionType=recurring")
         append("&trialAmount=0.01")
         append("&trialPeriod=P3D")
     }
@@ -142,13 +142,27 @@ internal class FlexPayClientTest {
 
     @Test
     fun `get upgrade subscription url returns correct url`() {
-        val signedParams = params + mapOf("type" to "upgradesubscription", "version" to protocolVersion)
-        val signature = client.getSignature(signedParams)
-
-        assertThat(client.getUpgradeSubscriptionUrl(params))
+        assertThat(
+            client.getUpgradeSubscriptionUrl(
+                precedingSaleID = "433456",
+                period = "P1M",
+                subscriptionType = SubscriptionType.recurring,
+                priceAmount = "00.00".toBigDecimal(),
+                priceCurrency = SaleCurrency.USD,
+                custom1 = "custom1 value",
+                description = testDescription,
+                trialAmount = "0.01".toBigDecimal(),
+                trialPeriod = "P3D",
+                backURL = "http://backURL.test",
+            )
+        )
             .isEqualTo(
                 URL(
-                    "${baseUrl}startorder?$commonURLParams&type=upgradesubscription&version=$protocolVersion&signature=$signature",
+                    "https://secure.verotel.com/startorder?backURL=http%3A%2F%2FbackURL.test&custom1=custom1+value&" +
+                        "name=My+D%C5%A1%C4%8D%C5%99%C4%8D%C5%99%C5%99%C4%9B%C5%99%C4%9B%26%3F%3Dblah123&period=P1M&" +
+                        "precedingSaleID=433456&priceAmount=0.00&priceCurrency=USD&shopID=60678&" +
+                        "subscriptionType=recurring&trialAmount=0.01&trialPeriod=P3D&type=upgradesubscription&" +
+                        "version=3.5&signature=1ec5569c6c69bd5adffdeff84198dd1dabf08dbc257bb3517fd4e508786c620b",
                 )
             )
     }
