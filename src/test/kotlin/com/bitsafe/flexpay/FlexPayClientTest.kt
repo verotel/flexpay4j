@@ -83,7 +83,7 @@ internal class FlexPayClientTest {
 
     @Test
     fun `lib version is in sync with the test`() {
-        assertThat(FlexPayClient.PROTOCOL_VERSION).isEqualTo(protocolVersion)
+        assertThat(FLEXPAY_VERSION).isEqualTo(protocolVersion)
     }
 
     @Test

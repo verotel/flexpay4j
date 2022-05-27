@@ -9,6 +9,8 @@ import java.util.*
 typealias ParamsMap = Map<String, String>
 typealias MutableParamsMap = MutableMap<String, String>
 
+const val FLEXPAY_VERSION = "3.5"
+
 /**
  * FlexPay client library
  *
@@ -83,7 +85,7 @@ class FlexPayClient(
         declineURL: String? = null,
         oneClickToken: String? = null,
         email: String? = null,
-        version: String = "3.5"
+        version: String = FLEXPAY_VERSION
     ): URL {
         val purchaseParams = mutableMapOf(
             "version" to version,
@@ -148,7 +150,7 @@ class FlexPayClient(
         backURL: String? = null,
         declineURL: String? = null,
         email: String? = null,
-        version: String = "3.5"
+        version: String = FLEXPAY_VERSION
     ): URL {
         val subscriptionParams = mutableMapOf(
             "version" to version,
@@ -181,7 +183,7 @@ class FlexPayClient(
      * Obtained via sale ID
      * Data is provided in YML format
      */
-    fun getStatusUrlBySale(saleID: String, version: String = "3.5"): URL {
+    fun getStatusUrlBySale(saleID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
             brand.STATUS_PATH, UrlType.STATUS, mapOf(
                 "saleID" to saleID,
@@ -195,7 +197,7 @@ class FlexPayClient(
      * Obtained via sale reference ID
      * Data is provided in YML format
      */
-    fun getStatusUrlByReference(referenceID: String, version: String = "3.5"): URL {
+    fun getStatusUrlByReference(referenceID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
             brand.STATUS_PATH, UrlType.STATUS, mapOf(
                 "referenceID" to referenceID,
@@ -255,7 +257,7 @@ class FlexPayClient(
         }
 
         val workingParams = params.toMutableMap().apply {
-            put("version", Companion.PROTOCOL_VERSION)
+            put("version", FLEXPAY_VERSION)
             putIfAbsent("shopID", websiteId)
             putIf("type", type.nameForUrl, condition = type.isPartOfUrl)
         }
@@ -282,10 +284,6 @@ class FlexPayClient(
         )
 
         return filterKeys { allowed.contains(it) }
-    }
-
-    companion object {
-        const val PROTOCOL_VERSION = "3.5"
     }
 }
 
