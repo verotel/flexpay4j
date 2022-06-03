@@ -1,7 +1,7 @@
 # FlexPay4J
 
 This library allows you, as a Verotel/CardBilling/GayCharge merchant to easily
-**perform payments** - both single purchases and subscriptions.
+**perform payments** on the Verotel platform (https://www.verotel.com).
 
 ## FlexPay
 
@@ -9,7 +9,8 @@ FlexPay is a protocol that facilitates these payments.
 
 **[Full FlexPay documentation can be found in the Control Center](https://controlcenter.verotel.com/flexpay-doc/#verotel-flexpay-documentation)**
 
-This library makes it easier to use this protocol:
+This library integrates this documentation and makes it easier to
+use this protocol:
 
 ## Usage
 
