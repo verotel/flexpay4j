@@ -1,4 +1,4 @@
-# FlexPay4J
+# FlexPay4j
 
 This library allows you, as a Verotel/CardBilling/GayCharge merchant to easily
 **perform payments** on the Verotel platform (https://www.verotel.com).
@@ -9,21 +9,18 @@ FlexPay is a protocol that facilitates these payments.
 
 **[Full FlexPay documentation can be found in the Control Center](https://controlcenter.verotel.com/flexpay-doc/#verotel-flexpay-documentation)**
 
-This library integrates this documentation and makes it easier to
-use this protocol:
+This library makes it easier to use this protocol:
 
 ## Usage
 
-(library has not been published yet, so this won't work yet)
-
 ```kotlin
-implementation("com.verotel.flexpay:flexpay4j")
+implementation("com.verotel:flexpay4j:1.0.0")
 ```
 
 ```kotlin
 val flexPayClient = FlexPayClient(
     websiteId = 685478,
-    signatureKey = "6Twn89s80aKQ3hpU89f1",
+    signatureKey = "d6dToIj2d6YJ1PX2D1W9",
     brand = Brand.VEROTEL
 )
 
@@ -33,7 +30,7 @@ val purchaseUrl = flexPayClient.getPurchaseUrl(
     description = "Extra comfy XL pyjamas",
 )
 
-// You can pay here
+// You can pay here:
 println(purchaseUrl)
 ```
 

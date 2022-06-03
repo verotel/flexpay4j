@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm") version "1.6.20"
     `java-library`
     `maven-publish`
+    signing
 }
 
 group = "com.verotel"
@@ -31,14 +32,39 @@ tasks.withType<KotlinCompile> {
 
 publishing {
     publications {
-        create<MavenPublication>("library") {
+        create<MavenPublication>("mavenJava") {
+            pom {
+                name.set("FlexPay - Verotel payment protocol library")
+                description.set("Implements Verotel online payment protocol")
+                url.set("https://www.verotel.com/en/integration.html")
+                licenses {
+                    license {
+                        name.set("MIT license")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+                scm {
+                    connection.set("https://github.com/verotel/flexpay4j.git")
+                    url.set("https://github.com/verotel/flexpay4j")
+                }
+            }
             from(components["java"])
         }
     }
     repositories {
         maven {
-            name = "flexpay4j"
-            url = URI("https://github.com/verotel/flexpay4j.git")
+            url = URI("https://s01.oss.sonatype.org/content/repositories/releases/")
+            credentials(PasswordCredentials::class.java)
         }
     }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+signing {
+    sign(configurations.archives.get())
+    sign(publishing.publications["mavenJava"])
 }
