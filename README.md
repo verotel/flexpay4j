@@ -1,7 +1,8 @@
 # FlexPay4j
 
 This library allows you, as a Verotel/CardBilling/GayCharge merchant to easily
-**perform payments** on the Verotel platform (https://www.verotel.com).
+**perform payments** on the Verotel platform (https://www.verotel.com) in a
+Java or Kotlin environment.
 
 ## FlexPay
 
