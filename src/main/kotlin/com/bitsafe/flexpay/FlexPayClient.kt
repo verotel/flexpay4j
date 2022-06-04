@@ -28,7 +28,10 @@ const val FLEXPAY_VERSION = "3.5"
  * @param brand Brand of your account in Verotel - can be obtained manually (<code>Brand.CARDBILLING</code>) or derived from your Customer/Merchant ID
  * (<code>Brand.fromMerchantId("9804000000000000")</code>)
  */
-class FlexPayClient(
+
+class FlexPayClient
+@JvmOverloads
+constructor(
     private val websiteId: String,
     private val signatureKey: String,
     val brand: Brand = Brand.VEROTEL,
@@ -72,6 +75,7 @@ class FlexPayClient(
      *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
      * @param version version of the FlexPay call
      */
+    @JvmOverloads
     fun getPurchaseUrl(
         priceAmount: BigDecimal,
         priceCurrency: SaleCurrency,
@@ -134,6 +138,7 @@ class FlexPayClient(
      *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
      * @param version version of the FlexPay call
      */
+    @JvmOverloads
     fun getSubscriptionUrl(
         period: String,
         subscriptionType: SubscriptionType,
@@ -183,6 +188,7 @@ class FlexPayClient(
      * Obtained via sale ID
      * Data is provided in YAML format
      */
+    @JvmOverloads
     fun getStatusUrlBySale(saleID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
             brand.STATUS_PATH, UrlType.STATUS, mapOf(
@@ -197,6 +203,7 @@ class FlexPayClient(
      * Obtained via sale reference ID
      * Data is provided in YAML format
      */
+    @JvmOverloads
     fun getStatusUrlByReference(referenceID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
             brand.STATUS_PATH, UrlType.STATUS, mapOf(
@@ -230,6 +237,7 @@ class FlexPayClient(
      *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
      * @param version version of the FlexPay call
      */
+    @JvmOverloads
     fun getUpgradeSubscriptionUrl(
         precedingSaleID: String,
         period: String,
