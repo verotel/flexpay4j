@@ -30,6 +30,10 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+tasks.withType<JavaCompile> {
+    targetCompatibility = "1.8"
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
