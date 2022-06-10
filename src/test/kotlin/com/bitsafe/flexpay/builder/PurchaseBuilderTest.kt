@@ -1,5 +1,9 @@
-package com.bitsafe.flexpay
+package com.bitsafe.flexpay.builder
 
+import com.bitsafe.flexpay.FLEXPAY_VERSION
+import com.bitsafe.flexpay.FlexPayClient
+import com.bitsafe.flexpay.PaymentMethod
+import com.bitsafe.flexpay.SaleCurrency
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
