@@ -1,5 +1,6 @@
 package com.bitsafe.flexpay
 
+import com.bitsafe.flexpay.builder.PurchaseBuilder
 import java.math.BigDecimal
 import java.net.URL
 import java.net.URLEncoder.encode
@@ -50,6 +51,10 @@ constructor(
         if (websiteId.isEmpty()) {
             error("No shop ID (website ID) given");
         }
+    }
+
+    fun purchaseBuilder(): PurchaseBuilder {
+        return PurchaseBuilder(this)
     }
 
 
