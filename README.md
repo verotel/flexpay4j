@@ -15,7 +15,7 @@ This library makes it easier to use this protocol:
 ## Usage
 
 ```kotlin
-implementation("com.verotel:flexpay4j:1.0.1")
+implementation("com.verotel:flexpay4j:1.0.2")
 ```
 
 ```kotlin
