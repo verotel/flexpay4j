@@ -2,6 +2,7 @@ package com.bitsafe.flexpay
 
 import com.bitsafe.flexpay.builder.PurchaseBuilder
 import com.bitsafe.flexpay.builder.SubscriptionBuilder
+import com.bitsafe.flexpay.builder.SubscriptionUpgradeBuilder
 import java.math.BigDecimal
 import java.net.URL
 import java.net.URLEncoder.encode
@@ -56,6 +57,7 @@ constructor(
 
     fun purchaseBuilder(): PurchaseBuilder = PurchaseBuilder(this)
     fun subscriptionBuilder(): SubscriptionBuilder = SubscriptionBuilder(this)
+    fun subscriptionUpgradeBuilder(): SubscriptionUpgradeBuilder = SubscriptionUpgradeBuilder(this)
 
     /**
      * Provides URL where a buyer can pay the given amount for a one-off purchase
