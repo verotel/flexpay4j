@@ -14,9 +14,27 @@ This library makes it easier to use this protocol:
 
 ## Usage
 
+### Import
+
+Gradle:
+
 ```kotlin
-implementation("com.verotel:flexpay4j:1.0.2")
+implementation("com.verotel:flexpay4j:1.1.0")
 ```
+
+Maven:
+
+```XML
+<dependency>
+    <groupId>com.verotel</groupId>
+    <artifactId>flexpay4j</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
+### Code
+
+Kotlin:
 
 ```kotlin
 val flexPayClient = FlexPayClient(
@@ -30,9 +48,34 @@ val purchaseUrl = flexPayClient.getPurchaseUrl(
     priceCurrency = SaleCurrency.EUR,
     description = "Extra comfy XL pyjamas",
 )
+//  ---- OR ----
+val purchaseUrl = flexPayClient.purchaseBuilder()
+    .withAmount("14".toBigDecimal(), SaleCurrency.EUR)
+    .withDescription("test description")
+    .withPaymentMethod(PaymentMethod.CC)
+    .build();
+```
 
-// You can pay here:
-println(purchaseUrl)
+Java:
+
+```java
+FlexPayClient flexPayClient = new FlexPayClient(
+    685478,
+    "d6dToIj2d6YJ1PX2D1W9",
+    Brand.VEROTEL
+);
+
+URL purchaseUrl = flexPayClient.getPurchaseUrl(
+    new BigDecimal("25.99"),
+    SaleCurrency.EUR,
+    "Extra comfy XL pyjamas"
+);
+//  ---- OR ----
+URL purchaseUrl = flexPayClient.purchaseBuilder()
+    .withAmount("14".toBigDecimal(), SaleCurrency.EUR)
+    .withDescription("test description")
+    .withPaymentMethod(PaymentMethod.CC)
+    .build();
 ```
 
 
