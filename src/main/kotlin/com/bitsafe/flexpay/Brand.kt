@@ -6,7 +6,8 @@ enum class Brand(val BASE_URL: String) {
     CARDBILLING("https://secure.billing.creditcard"),
     GAYCHARGE("https://secure.gaycharge.com"),
     PAINTFEST("https://secure.paintfestpayments.com"),
-    BILL("https://secure.bill.creditcard");
+    BILL("https://secure.bill.creditcard"),
+    YOURSAFE_DIRECT("https://secure.yoursafedirect.com");
 
     val FLEXPAY_PATH = "/startorder"
     val STATUS_PATH = "/salestatus"
@@ -24,6 +25,7 @@ enum class Brand(val BASE_URL: String) {
             "9511" to BILL,
             "9444" to PAINTFEST,
             "9388" to GAYCHARGE,
+            "9001" to YOURSAFE_DIRECT,
         )
 
         fun fromMerchantId(merchantID: String): Brand {

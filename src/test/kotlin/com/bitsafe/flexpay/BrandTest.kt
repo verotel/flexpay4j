@@ -54,6 +54,14 @@ class BrandTest {
     }
 
     @Test
+    fun `create from merchant id YoursafeDirect brand`() {
+        val brand = Brand.fromMerchantId("9001000000000001")
+        assertThat(brand).isInstanceOf(Brand.YOURSAFE_DIRECT::class.java)
+        assertThat(brand.flexPayUrl).isEqualTo("https://secure.yoursafedirect.com/startorder")
+        assertThat(brand.statusUrl).isEqualTo("https://secure.yoursafedirect.com/salestatus")
+    }
+
+    @Test
     fun `create from merchant id - unknown brand`() {
         assertThatThrownBy {
             Brand.fromMerchantId("1234000000000000")
