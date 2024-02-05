@@ -19,7 +19,7 @@ This library makes it easier to use this protocol:
 Gradle:
 
 ```kotlin
-implementation("com.verotel:flexpay4j:1.2.0")
+implementation("com.verotel:flexpay4j:1.2.1")
 ```
 
 Maven:
@@ -28,7 +28,7 @@ Maven:
 <dependency>
     <groupId>com.verotel</groupId>
     <artifactId>flexpay4j</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
