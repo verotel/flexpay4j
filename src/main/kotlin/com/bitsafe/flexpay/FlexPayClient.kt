@@ -382,7 +382,7 @@ enum class SaleCurrency {
 }
 
 enum class PaymentMethod {
-    CC, DDEU
+    CC, DDEU, IDEAL
 }
 
 enum class SubscriptionType {
