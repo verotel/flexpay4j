@@ -14,6 +14,8 @@ This library makes it easier to use this protocol:
 
 ## Usage
 
+This package is hosted in the [Maven central repository](https://search.maven.org/artifact/com.verotel/flexpay4j)
+
 ### Import
 
 Gradle:
