@@ -1,6 +1,6 @@
 # FlexPay4j
 
-This library allows you, as a Verotel/CardBilling/GayCharge merchant to easily
+This library allows you, as a Verotel merchant to easily
 **perform payments** on the Verotel platform (https://www.verotel.com) in a
 Java or Kotlin environment.
 
@@ -53,7 +53,7 @@ val purchaseUrl = flexPayClient.purchaseBuilder()
     .withAmount("14".toBigDecimal(), SaleCurrency.EUR)
     .withDescription("test description")
     .withPaymentMethod(PaymentMethod.CC)
-    .build();
+    .build()
 ```
 
 Java:

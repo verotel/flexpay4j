@@ -18,7 +18,7 @@ class SubscriptionBuilder(private val flexpay: FlexPayClient) {
     private var custom1: String? = null
     private var custom2: String? = null
     private var custom3: String? = null
-    private var backURL: String? = null
+    private var successURL: String? = null
     private var declineURL: String? = null
     private var email: String? = null
     private var version: String = FLEXPAY_VERSION
@@ -90,8 +90,8 @@ class SubscriptionBuilder(private val flexpay: FlexPayClient) {
         return this
     }
 
-    fun withBackURL(withBackURL: String): SubscriptionBuilder {
-        backURL = withBackURL
+    fun withSuccessURL(withSuccessURL: String): SubscriptionBuilder {
+        successURL = withSuccessURL
 
         return this
     }
@@ -128,7 +128,7 @@ class SubscriptionBuilder(private val flexpay: FlexPayClient) {
             custom1 = custom1,
             custom2 = custom2,
             custom3 = custom3,
-            backURL = backURL,
+            successURL = successURL,
             declineURL = declineURL,
             email = email,
             version = version,

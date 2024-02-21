@@ -11,8 +11,8 @@ internal class PurchaseBuilderTest {
 
     @Test
     fun `builds purchase URL`() {
-        val flexpay = FlexPayClient(7, "xx")
-        val urlFromMethod = flexpay.getPurchaseUrl(
+        val flexPay = FlexPayClient(7, "xx")
+        val urlFromMethod = flexPay.getPurchaseUrl(
             priceAmount = "14".toBigDecimal(),
             priceCurrency = SaleCurrency.EUR,
             description = "test description",
@@ -21,13 +21,13 @@ internal class PurchaseBuilderTest {
             custom1 = "cus1",
             custom2 = "cus2",
             custom3 = "cus3",
-            backURL = "back.url",
+            successURL = "success.url",
             declineURL = "decline.url",
             oneClickToken = "tok",
             email = "email",
             version = FLEXPAY_VERSION,
         )
-        val urlFromBuilder = flexpay.purchaseBuilder()
+        val urlFromBuilder = flexPay.purchaseBuilder()
             .withAmount("14".toBigDecimal(), SaleCurrency.EUR)
             .withDescription("test description")
             .withPaymentMethod(PaymentMethod.CC)
@@ -35,7 +35,7 @@ internal class PurchaseBuilderTest {
             .withCustom1("cus1")
             .withCustom2("cus2")
             .withCustom3("cus3")
-            .withBackURL("back.url")
+            .withSuccessURL("success.url")
             .withDeclineURL("decline.url")
             .withOneClickToken("tok")
             .withEmail("email")

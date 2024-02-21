@@ -21,7 +21,7 @@ internal class SubscriptionBuilderTest {
             .withCustom1("cus1")
             .withCustom2("cus2")
             .withCustom3("cus3")
-            .withBackURL("back.url")
+            .withSuccessURL("success.url")
             .withDeclineURL("decline.url")
             .withEmail("email")
             .withVersion(FLEXPAY_VERSION)
@@ -40,7 +40,7 @@ internal class SubscriptionBuilderTest {
             custom1 = "cus1",
             custom2 = "cus2",
             custom3 = "cus3",
-            backURL = "back.url",
+            successURL = "success.url",
             declineURL = "decline.url",
             email = "email",
             version = FLEXPAY_VERSION,

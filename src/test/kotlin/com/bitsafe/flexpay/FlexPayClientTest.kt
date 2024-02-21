@@ -6,8 +6,8 @@ import java.math.BigDecimal
 import java.net.URL
 
 internal class FlexPayClientTest {
-    val protocolVersion = "3.5";
-    val secret = "zpXwe2D77g4P7ysGJcr3rY87TBYs6J";
+    val protocolVersion = "4";
+    val secret = "zpXwe2D77g4P7ysGJcr3rY87TBYs6J"
     val testDescription = "My Dščřčřřěřě&?=blah123"
     val params = mapOf(
         "shopID" to "68849",
@@ -23,17 +23,17 @@ internal class FlexPayClientTest {
         "name" to "My name",
         "trialAmount" to "0.01",
         "trialPeriod" to "P3D",
-        "backURL" to "http://backURL.test",
+        "successURL" to "http://successURL.test",
         "declineURL" to "http://declineURL.test",
         "cancelDiscountPercentage" to "30",
         "blah" to "something",
-    );
-    val signatureOfFiltered = "c32809a80e3a97d4be5c05b8e241d32141b169c9d7d74294ce50ba313d6817b3"
+    )
+    val signatureOfFiltered = "1a790e1ebf654b9a38884a5c9a867a7e57134f103a1c9c8d9854da794a839d03"
     val signatureOfAll = "a8c18e900fad7af686c3b6dc9f00f197f9d6ea210566ef0d81fb07555f23504d"
     val oldSha1SignatureOfAll = "3650ddcc9360de60f4fc78604057c9f3246923cb"
     val baseUrl = "https://secure.verotel.com/"
     val commonURLParams = buildString {
-        append("backURL=http%3A%2F%2FbackURL.test")
+        append("successURL=http%3A%2F%2FsuccessURL.test")
         append("&blah=something")
         append("&cancelDiscountPercentage=30")
         append("&custom1=My")
@@ -62,14 +62,23 @@ internal class FlexPayClientTest {
 
     @Test
     fun `validates signature as correct`() {
-        val signedParams = params + mapOf("signature" to signatureOfAll.uppercase())
-
-        assertThat(client.validateSignature(signedParams)).isTrue
-    }
-
-    @Test
-    fun `validates signature as correct for old sha1 signature`() {
-        val signedParams = params + mapOf("signature" to oldSha1SignatureOfAll.uppercase())
+        val signedParams = mapOf(
+            "shopID" to "68849",
+            "priceAmount" to "0.00",
+            "referenceID" to "reference1234",
+            "priceCurrency" to "USD",
+            "custom1" to "My",
+            "description" to testDescription,
+            "subscriptionType" to "RECURRING",
+            "period" to "P1M",
+            "name" to "My name",
+            "trialAmount" to "0.01",
+            "trialPeriod" to "P3D",
+            "successURL" to "http://successURL.test",
+            "declineURL" to "http://declineURL.test",
+            "cancelDiscountPercentage" to "30",
+            "signature" to "0df722dd32b8a9f68e3ae4e3f226651eba1397d7928862635ba32674dc7bed6a"
+        )
 
         assertThat(client.validateSignature(signedParams)).isTrue
     }
@@ -99,14 +108,14 @@ internal class FlexPayClientTest {
             "custom3=custom3",
             "referenceID=ref1",
             "shopID=$shopId",
-            "backURL=${"http://example.com/approve".encodeUrlValue()}",
+            "successURL=${"http://example.com/approve".encodeUrlValue()}",
             "declineURL=${"http://example.com/decline".encodeUrlValue()}",
             "type=purchase",
             "version=$protocolVersion",
         )
             .sorted()
             .toMutableList()
-            .apply { this.add("signature=e72fb1b6e51024a21c5dfdfd95792a99d774ddaf3036a6ecd2d7def186fb8006") }
+            .apply { this.add("signature=08a33095ae3f4cee4ba25bc50a4076d11c008b84e40423a1cd436c29d2a9225b") }
             .joinToString("&")
 
         assertThat(
@@ -119,7 +128,7 @@ internal class FlexPayClientTest {
                 custom1 = "custom1",
                 custom2 = "custom2",
                 custom3 = "custom3",
-                backURL = "http://example.com/approve",
+                successURL = "http://example.com/approve",
                 declineURL = "http://example.com/decline",
                 email = "foo@example.com"
             )
@@ -153,16 +162,17 @@ internal class FlexPayClientTest {
                 description = testDescription,
                 trialAmount = "0.01".toBigDecimal(),
                 trialPeriod = "P3D",
-                backURL = "http://backURL.test",
+                successURL = "http://successURL.test",
             )
         )
             .isEqualTo(
                 URL(
-                    "https://secure.verotel.com/startorder?backURL=http%3A%2F%2FbackURL.test&custom1=custom1+value&" +
+                    "https://secure.verotel.com/startorder?custom1=custom1+value&" +
                         "name=My+D%C5%A1%C4%8D%C5%99%C4%8D%C5%99%C5%99%C4%9B%C5%99%C4%9B%26%3F%3Dblah123&period=P1M&" +
                         "precedingSaleID=433456&priceAmount=0.00&priceCurrency=USD&shopID=60678&" +
-                        "subscriptionType=recurring&trialAmount=0.01&trialPeriod=P3D&type=upgradesubscription&" +
-                        "version=3.5&signature=1ec5569c6c69bd5adffdeff84198dd1dabf08dbc257bb3517fd4e508786c620b",
+                        "subscriptionType=recurring&successURL=http%3A%2F%2FsuccessURL.test&trialAmount=0.01&" +
+                        "trialPeriod=P3D&type=upgradesubscription&" +
+                        "version=4&signature=cc4da94d214a4eb64a3f7affa3c39d168a9163c020f9caacca9bfd7498e33abc",
                 )
             )
     }

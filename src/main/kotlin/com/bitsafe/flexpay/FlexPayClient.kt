@@ -12,7 +12,7 @@ import java.util.*
 typealias ParamsMap = Map<String, String>
 typealias MutableParamsMap = MutableMap<String, String>
 
-const val FLEXPAY_VERSION = "3.5"
+const val FLEXPAY_VERSION = "4"
 
 /**
  * FlexPay client library
@@ -73,7 +73,7 @@ constructor(
      * @param custom1 pass-through variable - max 255 printable characters
      * @param custom2 pass-through variable - max 255 printable characters
      * @param custom3 pass-through variable - max 255 printable characters
-     * @param backURL URL for redirect after successful transaction - max 255 characters
+     * @param successURL URL for redirect after successful transaction - max 255 characters
      * @param declineURL URL for redirect after declined transaction - max 255 characters
      * @param oneClickToken the one-time oneClickToken from previous purchase
      *          NOTE: oneClickToken is excluded from signature calculations
@@ -91,7 +91,7 @@ constructor(
         custom1: String? = null,
         custom2: String? = null,
         custom3: String? = null,
-        backURL: String? = null,
+        successURL: String? = null,
         declineURL: String? = null,
         oneClickToken: String? = null,
         email: String? = null,
@@ -111,7 +111,7 @@ constructor(
             custom1 = custom1,
             custom2 = custom2,
             custom3 = custom3,
-            backURL = backURL,
+            successURL = successURL,
             declineURL = declineURL,
             email = email
         )
@@ -138,7 +138,7 @@ constructor(
      * @param custom1 pass-through variable - max 255 printable characters
      * @param custom2 pass-through variable - max 255 printable characters
      * @param custom3 pass-through variable - max 255 printable characters
-     * @param backURL URL for redirect after successful transaction - max 255 characters
+     * @param successURL URL for redirect after successful transaction - max 255 characters
      * @param declineURL URL for redirect after declined transaction - max 255 characters
      * @param email email of the buyer. If not set, it will be collected on the Order Page
      *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
@@ -158,7 +158,7 @@ constructor(
         custom1: String? = null,
         custom2: String? = null,
         custom3: String? = null,
-        backURL: String? = null,
+        successURL: String? = null,
         declineURL: String? = null,
         email: String? = null,
         version: String = FLEXPAY_VERSION
@@ -181,7 +181,7 @@ constructor(
             custom1 = custom1,
             custom2 = custom2,
             custom3 = custom3,
-            backURL = backURL,
+            successURL = successURL,
             declineURL = declineURL,
             email = email
         )
@@ -238,7 +238,7 @@ constructor(
      * @param custom1 pass-through variable - max 255 printable characters
      * @param custom2 pass-through variable - max 255 printable characters
      * @param custom3 pass-through variable - max 255 printable characters
-     * @param backURL URL for redirect after successful transaction - max 255 characters
+     * @param successURL URL for redirect after successful transaction - max 255 characters
      * @param email email of the buyer. If not set, it will be collected on the Order Page
      *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
      * @param version version of the FlexPay call
@@ -257,7 +257,7 @@ constructor(
         custom1: String? = null,
         custom2: String? = null,
         custom3: String? = null,
-        backURL: String? = null,
+        successURL: String? = null,
         email: String? = null,
         version: String = FLEXPAY_VERSION
     ): URL {
@@ -278,7 +278,7 @@ constructor(
         upgradeParams.putIfNotNull("custom1", custom1)
         upgradeParams.putIfNotNull("custom2", custom2)
         upgradeParams.putIfNotNull("custom3", custom3)
-        upgradeParams.putIfNotNull("backURL", backURL)
+        upgradeParams.putIfNotNull("successURL", successURL)
         upgradeParams.putIfNotNull("email", email)
 
         return generateUrl(brand.FLEXPAY_PATH, UrlType.UPGRADESUBSCRIPTION, upgradeParams)
@@ -360,7 +360,7 @@ constructor(
             "version", "shopID", "priceAmount", "priceCurrency", "paymentMethod", "description",
             "referenceID", "saleID", "custom1", "custom2", "custom3", "subscriptionType",
             "period", "name", "trialAmount", "trialPeriod", "cancelDiscountPercentage", "type",
-            "backURL", "declineURL", "precedingSaleID", "upgradeOption",
+            "successURL", "declineURL", "precedingSaleID", "upgradeOption",
         )
 
         return filterKeys { allowed.contains(it) }
@@ -413,7 +413,7 @@ private fun MutableParamsMap.setCommonParams(
     custom1: String?,
     custom2: String?,
     custom3: String?,
-    backURL: String?,
+    successURL: String?,
     declineURL: String?,
     email: String?,
 ) {
@@ -422,7 +422,7 @@ private fun MutableParamsMap.setCommonParams(
     putIfNotNull("custom1", custom1)
     putIfNotNull("custom2", custom2)
     putIfNotNull("custom3", custom3)
-    putIfNotNull("backURL", backURL)
+    putIfNotNull("successURL", successURL)
     putIfNotNull("declineURL", declineURL)
     putIfNotNull("email", email)
 }
