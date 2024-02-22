@@ -12,6 +12,9 @@ import java.util.*
 typealias ParamsMap = Map<String, String>
 typealias MutableParamsMap = MutableMap<String, String>
 
+/**
+ * Denotes a version of the FlexPay payment protocol. (Not the version of this library)
+ */
 const val FLEXPAY_VERSION = "4"
 
 /**
@@ -73,7 +76,7 @@ constructor(
      * @param custom1 pass-through variable - max 255 printable characters
      * @param custom2 pass-through variable - max 255 printable characters
      * @param custom3 pass-through variable - max 255 printable characters
-     * @param successURL URL for redirect after successful transaction - max 255 characters
+     * @param successURL Formerly known as backURL, successURL is a URL to which a buyer is redirected after successful transaction - max 255 characters
      * @param declineURL URL for redirect after declined transaction - max 255 characters
      * @param oneClickToken the one-time oneClickToken from previous purchase
      *          NOTE: oneClickToken is excluded from signature calculations

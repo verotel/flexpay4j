@@ -80,4 +80,7 @@ URL purchaseUrl = flexPayClient.purchaseBuilder()
     .build();
 ```
 
-
+## Changelog
+### Version 4.0 (Feb 2024)
+ - Parameter `backURL` has been renamed to `successURL`, along with the corresponding methods:
+   - Simply change calls of `.withBackURL(...)` to the new `.withSuccessURL(...)`

@@ -65,6 +65,10 @@ class PurchaseBuilder(private val flexpay: FlexPayClient) {
         return this
     }
 
+    /**
+     * Formerly known as backURL, successURL is a URL to which a buyer is redirected
+     * after a transaction has been successfully paid
+     */
     fun withSuccessURL(withSuccessURL: String): PurchaseBuilder {
         successURL = withSuccessURL
 
