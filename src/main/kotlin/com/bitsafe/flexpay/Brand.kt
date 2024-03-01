@@ -11,14 +11,6 @@ enum class Brand(val BASE_URL: String) {
     BILL("https://secure.bill.creditcard"),
     YOURSAFE_DIRECT("https://secure.yoursafedirect.com");
 
-    val FLEXPAY_PATH = "/startorder"
-    val STATUS_PATH = "/salestatus"
-    val CANCEL_PATH = "/cancel-subscription"
-
-    val flexPayUrl = "$BASE_URL$FLEXPAY_PATH"
-    val statusUrl = "$BASE_URL$STATUS_PATH"
-    val cancelUrl = "$BASE_URL$CANCEL_PATH"
-
     companion object {
         private val brandByMerchantPrefix = mapOf(
             "9804" to VEROTEL,
@@ -38,6 +30,7 @@ enum class Brand(val BASE_URL: String) {
             }
         }
 
+        @Deprecated("Use `Brand.fromMerchantId` or `Brand.SPECIFIC_BRAND` instead")
         fun fromName(brandName: String): Brand {
             return brandByMerchantPrefix.values.singleOrNull {
                 it.name.lowercase() == brandName.lowercase()

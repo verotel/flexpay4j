@@ -55,7 +55,11 @@ constructor(
             flexPayError("No shop ID (website ID) given");
         }
     }
-    
+
+    val FLEXPAY_PATH = "/startorder"
+    val STATUS_PATH = "/salestatus"
+    val CANCEL_PATH = "/cancel-subscription"
+
     fun purchaseBuilder(): PurchaseBuilder = PurchaseBuilder(this)
     fun subscriptionBuilder(): SubscriptionBuilder = SubscriptionBuilder(this)
     fun subscriptionUpgradeBuilder(): SubscriptionUpgradeBuilder = SubscriptionUpgradeBuilder(this)
@@ -119,7 +123,7 @@ constructor(
         }
 
         return generateUrl(
-            path = brand.FLEXPAY_PATH,
+            path = FLEXPAY_PATH,
             type = UrlType.PURCHASE,
             params = purchaseParams
         )
@@ -194,7 +198,7 @@ constructor(
         }
 
         return generateUrl(
-            path = brand.FLEXPAY_PATH,
+            path = FLEXPAY_PATH,
             type = UrlType.SUBSCRIPTION,
             params = subscriptionParams
         )
@@ -208,7 +212,7 @@ constructor(
     @JvmOverloads
     fun getStatusUrlBySale(saleID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
-            path = brand.STATUS_PATH,
+            path = STATUS_PATH,
             type = UrlType.STATUS,
             params = mapOf(
                 FlexPayRequestParameters.saleID.value to saleID,
@@ -225,7 +229,7 @@ constructor(
     @JvmOverloads
     fun getStatusUrlByReference(referenceID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
-            path = brand.STATUS_PATH,
+            path = STATUS_PATH,
             type = UrlType.STATUS,
             params = mapOf(
                 FlexPayRequestParameters.referenceID.value to referenceID,
@@ -305,7 +309,7 @@ constructor(
         }
 
         return generateUrl(
-            path = brand.FLEXPAY_PATH,
+            path = FLEXPAY_PATH,
             type = UrlType.UPGRADESUBSCRIPTION,
             params = upgradeParams
         )
@@ -318,7 +322,7 @@ constructor(
      * @param saleID Verotel saleID identifier
      */
     fun getCancelSubscriptionUrl(saleID: String): URL = generateUrl(
-        path = brand.CANCEL_PATH,
+        path = CANCEL_PATH,
         type = UrlType.CANCEL_SUBSCRIPTION,
         params = mapOf(FlexPayRequestParameters.saleID.value to saleID)
     )

@@ -9,56 +9,49 @@ class BrandTest {
     fun `create from merchant id - Verotel brand`() {
         val brand = Brand.fromMerchantId("9804000000000000")
         assertThat(brand).isInstanceOf(Brand.VEROTEL::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.verotel.com/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.verotel.com/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.verotel.com")
     }
 
     @Test
     fun `create from merchant id - CardBilling brand`() {
         val brand = Brand.fromMerchantId("9762000000000000")
         assertThat(brand).isInstanceOf(Brand.CARDBILLING::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.billing.creditcard/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.billing.creditcard/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.billing.creditcard")
     }
 
     @Test
     fun `create from merchant id - BitsafePay brand`() {
         val brand = Brand.fromMerchantId("9653000000000000")
         assertThat(brand).isInstanceOf(Brand.BITSAFEPAY::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.bitsafepay.com/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.bitsafepay.com/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.bitsafepay.com")
     }
 
     @Test
     fun `create from merchant id - Bill brand`() {
         val brand = Brand.fromMerchantId("9511000000004236")
         assertThat(brand).isInstanceOf(Brand.BILL::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.bill.creditcard/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.bill.creditcard/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.bill.creditcard")
     }
 
     @Test
     fun `create from merchant id - PaintFests brand`() {
         val brand = Brand.fromMerchantId("9444000000000001")
         assertThat(brand).isInstanceOf(Brand.PAINTFEST::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.paintfestpayments.com/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.paintfestpayments.com/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.paintfestpayments.com")
     }
 
     @Test
     fun `create from merchant id GayCharge brand`() {
         val brand = Brand.fromMerchantId("9388000000000001")
         assertThat(brand).isInstanceOf(Brand.GAYCHARGE::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.gaycharge.com/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.gaycharge.com/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.gaycharge.com")
     }
 
     @Test
     fun `create from merchant id YoursafeDirect brand`() {
         val brand = Brand.fromMerchantId("9001000000000001")
         assertThat(brand).isInstanceOf(Brand.YOURSAFE_DIRECT::class.java)
-        assertThat(brand.flexPayUrl).isEqualTo("https://secure.yoursafedirect.com/startorder")
-        assertThat(brand.statusUrl).isEqualTo("https://secure.yoursafedirect.com/salestatus")
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.yoursafedirect.com")
     }
 
     @Test
