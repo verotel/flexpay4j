@@ -1,5 +1,7 @@
 package com.bitsafe.flexpay
 
+import com.bitsafe.flexpay.utils.flexPayError
+
 enum class Brand(val BASE_URL: String) {
     VEROTEL("https://secure.verotel.com"),
     BITSAFEPAY("https://secure.bitsafepay.com"),
@@ -32,14 +34,14 @@ enum class Brand(val BASE_URL: String) {
             val merchantPrefix = merchantID.take(4)
 
             return brandByMerchantPrefix.getOrElse(merchantPrefix) {
-                error("Invalid merchant ID")
+                flexPayError("Invalid merchant ID")
             }
         }
 
         fun fromName(brandName: String): Brand {
             return brandByMerchantPrefix.values.singleOrNull {
                 it.name.lowercase() == brandName.lowercase()
-            } ?: error("Invalid brand name")
+            } ?: flexPayError("Invalid brand name")
         }
     }
 }

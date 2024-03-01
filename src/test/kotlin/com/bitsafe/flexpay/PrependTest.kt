@@ -1,10 +1,10 @@
 package com.bitsafe.flexpay
 
+import com.bitsafe.flexpay.utils.prepend
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class FlexPayClientKtTest {
+class PrependTest {
 
     @Test
     fun `prepend works`() {

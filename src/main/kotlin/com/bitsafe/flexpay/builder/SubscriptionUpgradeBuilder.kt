@@ -1,6 +1,10 @@
 package com.bitsafe.flexpay.builder
 
 import com.bitsafe.flexpay.*
+import com.bitsafe.flexpay.enums.PaymentMethod
+import com.bitsafe.flexpay.enums.SaleCurrency
+import com.bitsafe.flexpay.enums.SubscriptionType
+import com.bitsafe.flexpay.enums.UpgradeOption
 import java.math.BigDecimal
 import java.net.URL
 import kotlin.error

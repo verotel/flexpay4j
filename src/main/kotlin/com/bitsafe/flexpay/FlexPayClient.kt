@@ -3,14 +3,12 @@ package com.bitsafe.flexpay
 import com.bitsafe.flexpay.builder.PurchaseBuilder
 import com.bitsafe.flexpay.builder.SubscriptionBuilder
 import com.bitsafe.flexpay.builder.SubscriptionUpgradeBuilder
+import com.bitsafe.flexpay.enums.*
+import com.bitsafe.flexpay.utils.*
 import java.math.BigDecimal
 import java.net.URL
-import java.net.URLEncoder.encode
 import java.security.MessageDigest
 import java.util.*
-
-typealias ParamsMap = Map<String, String>
-typealias MutableParamsMap = MutableMap<String, String>
 
 /**
  * Denotes a version of the FlexPay payment protocol. (Not the version of this library)
@@ -50,11 +48,11 @@ constructor(
 
     init {
         if (signatureKey.isEmpty()) {
-            error("No FlexPay secret given");
+            flexPayError("No FlexPay secret given");
         }
 
         if (websiteId.isEmpty()) {
-            error("No shop ID (website ID) given");
+            flexPayError("No shop ID (website ID) given");
         }
     }
     
@@ -369,7 +367,7 @@ constructor(
      */
     private fun generateUrl(path: String, type: UrlType, params: ParamsMap): URL {
         if (params.isEmpty()) {
-            error("No params given")
+            flexPayError("No params given")
         }
 
         val workingParams = params.toMutableMap().apply {
@@ -403,120 +401,26 @@ constructor(
             signedKeys.contains(it)
         }
     }
-}
 
-fun <E> List<E>.prepend(valueToPrepend: E): List<E> {
-    return buildList(this.size + 1) {
-        add(valueToPrepend)
-        addAll(this@prepend)
+    private fun MutableParamsMap.setCommonParams(
+        paymentMethod: PaymentMethod?,
+        referenceID: String?,
+        custom1: String?,
+        custom2: String?,
+        custom3: String?,
+        successURL: String?,
+        declineURL: String?,
+        email: String?,
+    ) {
+        putIfNotNull(FlexPayRequestParameters.paymentMethod.value, paymentMethod?.name)
+        putIfNotNull(FlexPayRequestParameters.referenceID.value, referenceID)
+        putIfNotNull(FlexPayRequestParameters.custom1.value, custom1)
+        putIfNotNull(FlexPayRequestParameters.custom2.value, custom2)
+        putIfNotNull(FlexPayRequestParameters.custom3.value, custom3)
+        putIfNotNull(FlexPayRequestParameters.successURL.value, successURL)
+        putIfNotNull(FlexPayRequestParameters.declineURL.value, declineURL)
+        putIfNotNull(FlexPayRequestParameters.email.value, email)
     }
 }
-
-enum class UrlType(val isPartOfUrl: Boolean) {
-    PURCHASE(isPartOfUrl = true),
-    SUBSCRIPTION(isPartOfUrl = true),
-    UPGRADESUBSCRIPTION(isPartOfUrl = true),
-    STATUS(isPartOfUrl = false),
-    CANCEL_SUBSCRIPTION(isPartOfUrl = false);
-
-    val nameForUrl = name.lowercase()
-}
-
-enum class SaleCurrency {
-    USD, EUR, GBP, AUD, CAD, CHF, DKK, NOK, SEK
-}
-
-enum class PaymentMethod {
-    CC, DDEU, IDEAL
-}
-
-enum class SubscriptionType {
-    `one-time`, recurring
-}
-
-/**
- * How to deal with the remaining period from a previous sale
- */
-enum class UpgradeOption {
-    /**
-     * Remaining period is lost
-     */
-    lost,
-
-    /**
-     * Remaining period is added to the new sale
-     */
-    extend
-}
-
-enum class SignatureHashAlgorithm {
-    sha256, sha1
-}
-
-enum class FlexPayRequestParameters(val isSigned: Boolean, val flexPayName: String? = null) {
-    version(isSigned = true),
-    shopID(isSigned = true),
-    priceAmount(isSigned = true),
-    priceCurrency(isSigned = true),
-    paymentMethod(isSigned = true),
-    description(isSigned = true),
-    referenceID(isSigned = true),
-    saleID(isSigned = true),
-    custom1(isSigned = true),
-    custom2(isSigned = true),
-    custom3(isSigned = true),
-    subscriptionType(isSigned = true),
-    period(isSigned = true),
-    descriptionForSubscription(isSigned = true, flexPayName = "name"),
-    trialAmount(isSigned = true),
-    trialPeriod(isSigned = true),
-    cancelDiscountPercentage(isSigned = true),
-    type(isSigned = true),
-    successURL(isSigned = true),
-    declineURL(isSigned = true),
-    precedingSaleID(isSigned = true),
-    upgradeOption(isSigned = true),
-    signature(isSigned = false),
-    email(isSigned = false),
-    oneClickToken(isSigned = false);
-
-    val value = flexPayName ?: name
-}
-
-fun error(message: String): Nothing = throw FlexPayException(message)
-
-fun MutableParamsMap.putIf(key: String, value: String, condition: Boolean) {
-    if (condition) {
-        put(key, value)
-    }
-}
-
-fun MutableParamsMap.putIfNotNull(key: String, value: String?) {
-    if (value != null) {
-        put(key, value)
-    }
-}
-
-fun String.encodeUrlValue() = encode(this, Charsets.UTF_8)
 
 class FlexPayException(message: String) : Throwable(message)
-
-private fun MutableParamsMap.setCommonParams(
-    paymentMethod: PaymentMethod?,
-    referenceID: String?,
-    custom1: String?,
-    custom2: String?,
-    custom3: String?,
-    successURL: String?,
-    declineURL: String?,
-    email: String?,
-) {
-    putIfNotNull(FlexPayRequestParameters.paymentMethod.value, paymentMethod?.name)
-    putIfNotNull(FlexPayRequestParameters.referenceID.value, referenceID)
-    putIfNotNull(FlexPayRequestParameters.custom1.value, custom1)
-    putIfNotNull(FlexPayRequestParameters.custom2.value, custom2)
-    putIfNotNull(FlexPayRequestParameters.custom3.value, custom3)
-    putIfNotNull(FlexPayRequestParameters.successURL.value, successURL)
-    putIfNotNull(FlexPayRequestParameters.declineURL.value, declineURL)
-    putIfNotNull(FlexPayRequestParameters.email.value, email)
-}

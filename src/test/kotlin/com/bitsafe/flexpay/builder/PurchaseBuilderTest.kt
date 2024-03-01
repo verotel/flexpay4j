@@ -2,8 +2,8 @@ package com.bitsafe.flexpay.builder
 
 import com.bitsafe.flexpay.FLEXPAY_VERSION
 import com.bitsafe.flexpay.FlexPayClient
-import com.bitsafe.flexpay.PaymentMethod
-import com.bitsafe.flexpay.SaleCurrency
+import com.bitsafe.flexpay.enums.PaymentMethod
+import com.bitsafe.flexpay.enums.SaleCurrency
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

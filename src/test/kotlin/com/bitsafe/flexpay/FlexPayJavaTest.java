@@ -1,5 +1,6 @@
 package com.bitsafe.flexpay;
 
+import com.bitsafe.flexpay.enums.SaleCurrency;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

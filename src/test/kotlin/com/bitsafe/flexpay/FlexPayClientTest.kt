@@ -1,5 +1,9 @@
 package com.bitsafe.flexpay
 
+import com.bitsafe.flexpay.enums.PaymentMethod
+import com.bitsafe.flexpay.enums.SaleCurrency
+import com.bitsafe.flexpay.enums.SubscriptionType
+import com.bitsafe.flexpay.utils.encodeUrlValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
