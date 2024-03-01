@@ -98,24 +98,25 @@ constructor(
         email: String? = null,
         version: String = FLEXPAY_VERSION
     ): URL {
-        val purchaseParams = mutableMapOf(
-            FlexPayRequestParameters.version.value to version,
-            FlexPayRequestParameters.priceAmount.value to priceAmount.toPlainString(),
-            FlexPayRequestParameters.priceCurrency.value to priceCurrency.name,
-        )
+        val purchaseParams = mutableMapOf<String, String>().apply {
+            this[FlexPayRequestParameters.version.value] = version
+            this[FlexPayRequestParameters.priceAmount.value] = priceAmount.toPlainString()
+            this[FlexPayRequestParameters.priceCurrency.value] = priceCurrency.name
 
-        purchaseParams.putIfNotNull(FlexPayRequestParameters.description.value, description)
-        purchaseParams.putIfNotNull(FlexPayRequestParameters.oneClickToken.value, oneClickToken)
-        purchaseParams.setCommonParams(
-            paymentMethod = paymentMethod,
-            referenceID = referenceID,
-            custom1 = custom1,
-            custom2 = custom2,
-            custom3 = custom3,
-            successURL = successURL,
-            declineURL = declineURL,
-            email = email
-        )
+            putIfNotNull(FlexPayRequestParameters.description.value, description)
+            putIfNotNull(FlexPayRequestParameters.oneClickToken.value, oneClickToken)
+
+            setCommonParams(
+                paymentMethod = paymentMethod,
+                referenceID = referenceID,
+                custom1 = custom1,
+                custom2 = custom2,
+                custom3 = custom3,
+                successURL = successURL,
+                declineURL = declineURL,
+                email = email
+            )
+        }
 
         return generateUrl(
             path = brand.FLEXPAY_PATH,
@@ -168,30 +169,35 @@ constructor(
         email: String? = null,
         version: String = FLEXPAY_VERSION
     ): URL {
-        val subscriptionParams = mutableMapOf(
-            FlexPayRequestParameters.version.value to version,
-            FlexPayRequestParameters.priceAmount.value to priceAmount.toPlainString(),
-            FlexPayRequestParameters.priceCurrency.value to priceCurrency.name,
-            FlexPayRequestParameters.type.value to "subscription", // TODO - do not use strings
-            FlexPayRequestParameters.subscriptionType.value to subscriptionType.name,
-            FlexPayRequestParameters.period.value to period,
-        )
+        val subscriptionParams = mutableMapOf<String, String>().apply {
+            this[FlexPayRequestParameters.version.value] = version
+            this[FlexPayRequestParameters.priceAmount.value] = priceAmount.toPlainString()
+            this[FlexPayRequestParameters.priceCurrency.value] = priceCurrency.name
+            this[FlexPayRequestParameters.type.value] = UrlType.SUBSCRIPTION.nameForUrl
+            this[FlexPayRequestParameters.subscriptionType.value] = subscriptionType.name
+            this[FlexPayRequestParameters.period.value] = period
 
-        subscriptionParams.putIfNotNull(FlexPayRequestParameters.descriptionForSubscription.value, description)
-        subscriptionParams.putIfNotNull(FlexPayRequestParameters.trialAmount.value, trialAmount?.toPlainString())
-        subscriptionParams.putIfNotNull(FlexPayRequestParameters.trialPeriod.value, trialPeriod)
-        subscriptionParams.setCommonParams(
-            paymentMethod = paymentMethod,
-            referenceID = referenceID,
-            custom1 = custom1,
-            custom2 = custom2,
-            custom3 = custom3,
-            successURL = successURL,
-            declineURL = declineURL,
-            email = email
-        )
+            putIfNotNull(FlexPayRequestParameters.descriptionForSubscription.value, description)
+            putIfNotNull(FlexPayRequestParameters.trialAmount.value, trialAmount?.toPlainString())
+            putIfNotNull(FlexPayRequestParameters.trialPeriod.value, trialPeriod)
 
-        return generateUrl(brand.FLEXPAY_PATH, UrlType.SUBSCRIPTION, subscriptionParams)
+            setCommonParams(
+                paymentMethod = paymentMethod,
+                referenceID = referenceID,
+                custom1 = custom1,
+                custom2 = custom2,
+                custom3 = custom3,
+                successURL = successURL,
+                declineURL = declineURL,
+                email = email
+            )
+        }
+
+        return generateUrl(
+            path = brand.FLEXPAY_PATH,
+            type = UrlType.SUBSCRIPTION,
+            params = subscriptionParams
+        )
     }
 
     /**
@@ -202,7 +208,9 @@ constructor(
     @JvmOverloads
     fun getStatusUrlBySale(saleID: String, version: String = FLEXPAY_VERSION): URL {
         return generateUrl(
-            brand.STATUS_PATH, UrlType.STATUS, mapOf(
+            path = brand.STATUS_PATH,
+            type = UrlType.STATUS,
+            params = mapOf(
                 FlexPayRequestParameters.saleID.value to saleID,
                 FlexPayRequestParameters.version.value to version
             )
@@ -239,9 +247,8 @@ constructor(
      * @param priceAmount amount to be processed in nnn.nn format
      * @param priceCurrency priceCurrency 3 char ISO code, must be one of the Sale currencies (USD EUR GBP AUD CAD CHF DKK NOK SEK)
      *          NOTE: only EUR is can be used for DDEU payment method system
-     * @param paymentMethod payment method, CC or DDEU (if not set then buyers can choose from available payment methods)
-     *          NOTE: DDEU is available only in DE, AT, CH, BE, IT, NL, ES and FR
-     *          If oneClickToken is sent, the payment method must be set to CC
+     * @param paymentMethod payment method to use for the transaction. If not set the buyer can choose from available payment methods
+     *           If oneClickToken is sent, the payment method must be set to CC
      * @param custom1 pass-through variable - max 255 printable characters
      * @param custom2 pass-through variable - max 255 printable characters
      * @param custom3 pass-through variable - max 255 printable characters
@@ -272,26 +279,30 @@ constructor(
         declineURL: String? = null,
         upgradeOption: UpgradeOption? = null
     ): URL {
-        val upgradeParams = mutableMapOf(
-            FlexPayRequestParameters.precedingSaleID.value to precedingSaleID,
-            FlexPayRequestParameters.version.value to version,
-            FlexPayRequestParameters.priceAmount.value to priceAmount.toPlainString(),
-            FlexPayRequestParameters.priceCurrency.value to priceCurrency.name,
-            FlexPayRequestParameters.subscriptionType.value to subscriptionType.name,
-            FlexPayRequestParameters.period.value to period,
-        )
+        val upgradeParams = mutableMapOf<String, String>().apply {
+            this[FlexPayRequestParameters.precedingSaleID.value] = precedingSaleID
+            this[FlexPayRequestParameters.version.value] = version
+            this[FlexPayRequestParameters.priceAmount.value] = priceAmount.toPlainString()
+            this[FlexPayRequestParameters.priceCurrency.value] = priceCurrency.name
+            this[FlexPayRequestParameters.subscriptionType.value] = subscriptionType.name
+            this[FlexPayRequestParameters.period.value] = period
 
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.descriptionForSubscription.value, description)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.trialAmount.value, trialAmount?.toPlainString())
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.trialPeriod.value, trialPeriod)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.paymentMethod.value, paymentMethod?.name)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.custom1.value, custom1)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.custom2.value, custom2)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.custom3.value, custom3)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.successURL.value, successURL)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.email.value, email)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.declineURL.value, declineURL)
-        upgradeParams.putIfNotNull(FlexPayRequestParameters.upgradeOption.value, upgradeOption?.name)
+            putIfNotNull(FlexPayRequestParameters.descriptionForSubscription.value, description)
+            putIfNotNull(FlexPayRequestParameters.trialAmount.value, trialAmount?.toPlainString())
+            putIfNotNull(FlexPayRequestParameters.trialPeriod.value, trialPeriod)
+            putIfNotNull(FlexPayRequestParameters.upgradeOption.value, upgradeOption?.name)
+
+            setCommonParams(
+                paymentMethod = paymentMethod,
+                referenceID = null,
+                custom1 = custom1,
+                custom2 = custom2,
+                custom3 = custom3,
+                successURL = successURL,
+                declineURL = declineURL,
+                email = email
+            )
+        }
 
         return generateUrl(
             path = brand.FLEXPAY_PATH,
@@ -314,11 +325,14 @@ constructor(
 
     /**
      * Validates signature of a FlexPay postback to make sure the data is authentic
+     *
      * After every sale or transaction based action a corresponding postback is sent to the registered Postback URL.
      * Postback data are sent as GET request.
+     *
      * This method can be used to verify the authenticity of such postback
      *
      * @param urlParams *All* GET parameters received in the postback.
+     * @return Returns true if the postback is authentic, false otherwise
      */
     fun validateSignature(urlParams: ParamsMap): Boolean {
         val inputParams = urlParams.toMutableMap()
