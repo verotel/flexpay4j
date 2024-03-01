@@ -245,6 +245,8 @@ constructor(
      * @param email email of the buyer. If not set, it will be collected on the Order Page
      *          NOTE: email is excluded from signature calculations (max 100 chars else it will be ignored)
      * @param version version of the FlexPay call
+     * @param declineURL URL for redirect after unsuccessful transaction - max 255 characters
+     * @param upgradeOption How to deal with the remaining period from the previous sale
      */
     @JvmOverloads
     fun getUpgradeSubscriptionUrl(
@@ -262,14 +264,15 @@ constructor(
         custom3: String? = null,
         successURL: String? = null,
         email: String? = null,
-        version: String = FLEXPAY_VERSION
+        version: String = FLEXPAY_VERSION,
+        declineURL: String? = null,
+        upgradeOption: UpgradeOption? = null
     ): URL {
         val upgradeParams = mutableMapOf(
             "precedingSaleID" to precedingSaleID,
             "version" to version,
             "priceAmount" to priceAmount.toPlainString(),
             "priceCurrency" to priceCurrency.name,
-            "type" to "subscription",
             "subscriptionType" to subscriptionType.name,
             "period" to period,
         )
@@ -283,8 +286,14 @@ constructor(
         upgradeParams.putIfNotNull("custom3", custom3)
         upgradeParams.putIfNotNull("successURL", successURL)
         upgradeParams.putIfNotNull("email", email)
+        upgradeParams.putIfNotNull("declineURL", declineURL)
+        upgradeParams.putIfNotNull("upgradeOption", upgradeOption?.name)
 
-        return generateUrl(brand.FLEXPAY_PATH, UrlType.UPGRADESUBSCRIPTION, upgradeParams)
+        return generateUrl(
+            path = brand.FLEXPAY_PATH,
+            type = UrlType.UPGRADESUBSCRIPTION,
+            params = upgradeParams
+        )
     }
 
     /**
@@ -334,6 +343,9 @@ constructor(
         return HexFormat.of().formatHex(digest).lowercase()
     }
 
+    /**
+     * TODO: Add origin
+     */
     private fun generateUrl(path: String, type: UrlType, params: ParamsMap): URL {
         if (params.isEmpty()) {
             error("no params given")
@@ -390,6 +402,21 @@ enum class PaymentMethod {
 
 enum class SubscriptionType {
     `one-time`, recurring
+}
+
+/**
+ * How to deal with the remaining period from a previous sale
+ */
+enum class UpgradeOption {
+    /**
+     * Remaining period is lost
+     */
+    lost,
+
+    /**
+     * Remaining period is added to the new sale
+     */
+    extend
 }
 
 fun error(message: String): Nothing = throw FlexPayException(message)

@@ -8,7 +8,7 @@ import java.math.BigDecimal
 internal class SubscriptionUpgradeBuilderTest {
     @Test
     fun `builds subscription URL`() {
-        val flexpay = FlexPayClient(7, "xx")
+        val flexpay = FlexPayClient(websiteId = 7, signatureKey = "xx")
         val urlFromBuilder = flexpay.subscriptionUpgradeBuilder()
             .withPrecedingSaleID("42")
             .withPeriod("P3D")
@@ -24,6 +24,8 @@ internal class SubscriptionUpgradeBuilderTest {
             .withSuccessURL("success.url")
             .withEmail("email")
             .withVersion(FLEXPAY_VERSION)
+            .withDeclineURL("https://example.com/decline")
+            .withUpgradeOption(UpgradeOption.lost)
             .build()
 
         val urlFromMethod = flexpay.getUpgradeSubscriptionUrl(
@@ -42,6 +44,8 @@ internal class SubscriptionUpgradeBuilderTest {
             successURL = "success.url",
             email = "email",
             version = FLEXPAY_VERSION,
+            declineURL = "https://example.com/decline",
+            upgradeOption = UpgradeOption.lost,
         )
 
         assertThat(urlFromMethod).isEqualTo(urlFromBuilder)

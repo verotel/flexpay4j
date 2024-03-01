@@ -21,6 +21,8 @@ class SubscriptionUpgradeBuilder(private val flexpay: FlexPayClient) {
     private var successURL: String? = null
     private var email: String? = null
     private var version: String = FLEXPAY_VERSION
+    private var declineURL: String? = null
+    private var upgradeOption: UpgradeOption? = null
 
     fun withAmount(withAmount: BigDecimal, withCurrency: SaleCurrency): SubscriptionUpgradeBuilder {
         priceAmount = withAmount
@@ -107,6 +109,18 @@ class SubscriptionUpgradeBuilder(private val flexpay: FlexPayClient) {
         return this
     }
 
+    fun withDeclineURL(withDeclineURL: String): SubscriptionUpgradeBuilder {
+        declineURL = withDeclineURL
+
+        return this
+    }
+
+    fun withUpgradeOption(withUpgradeOption: UpgradeOption): SubscriptionUpgradeBuilder {
+        upgradeOption = withUpgradeOption
+
+        return this
+    }
+
     fun build(): URL {
         return flexpay.getUpgradeSubscriptionUrl(
             precedingSaleID = precedingSaleID ?: error("Preceding sale ID must be set"),
@@ -124,6 +138,8 @@ class SubscriptionUpgradeBuilder(private val flexpay: FlexPayClient) {
             successURL = successURL,
             email = email,
             version = version,
+            declineURL = declineURL,
+            upgradeOption = upgradeOption
         )
     }
 }
