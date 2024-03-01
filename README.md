@@ -34,50 +34,34 @@ Maven:
 </dependency>
 ```
 
-### Code
+### Obtain Brand
 
-Kotlin:
+#### Manually
+
+```kotlin
+val brand = Brand.YOURSAFE_DIRECT
+```
+
+#### From your merchant ID
+
+```kotlin
+val brand = Brand.fromMerchantId("9804000000000100")
+```
+
+### Create purchase link
 
 ```kotlin
 val flexPayClient = FlexPayClient(
     websiteId = 685478,
     signatureKey = "d6dToIj2d6YJ1PX2D1W9",
-    brand = Brand.VEROTEL
+    brand = brand
 )
 
-val purchaseUrl = flexPayClient.getPurchaseUrl(
-    priceAmount = "25.99".toBigDecimal(),
-    priceCurrency = SaleCurrency.EUR,
-    description = "Extra comfy XL pyjamas",
-)
-//  ---- OR ----
 val purchaseUrl = flexPayClient.purchaseBuilder()
     .withAmount("14".toBigDecimal(), SaleCurrency.EUR)
     .withDescription("test description")
     .withPaymentMethod(PaymentMethod.CC)
     .build()
-```
-
-Java:
-
-```java
-FlexPayClient flexPayClient = new FlexPayClient(
-    685478,
-    "d6dToIj2d6YJ1PX2D1W9",
-    Brand.VEROTEL
-);
-
-URL purchaseUrl = flexPayClient.getPurchaseUrl(
-    new BigDecimal("25.99"),
-    SaleCurrency.EUR,
-    "Extra comfy XL pyjamas"
-);
-//  ---- OR ----
-URL purchaseUrl = flexPayClient.purchaseBuilder()
-    .withAmount("14".toBigDecimal(), SaleCurrency.EUR)
-    .withDescription("test description")
-    .withPaymentMethod(PaymentMethod.CC)
-    .build();
 ```
 
 ## Changelog
