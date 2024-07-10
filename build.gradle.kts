@@ -58,7 +58,10 @@ publishing {
     repositories {
         maven {
             url = URI("https://s01.oss.sonatype.org/content/repositories/releases/")
-            credentials(PasswordCredentials::class.java)
+            credentials {
+                username = findProperty("ossrhToken") as String
+                password = findProperty("ossrhTokenPassword") as String
+            }
         }
     }
 }
