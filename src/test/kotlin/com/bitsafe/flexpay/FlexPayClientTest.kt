@@ -5,6 +5,7 @@ import com.bitsafe.flexpay.enums.SaleCurrency
 import com.bitsafe.flexpay.enums.SubscriptionType
 import com.bitsafe.flexpay.utils.encodeUrlValue
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.net.URL
@@ -58,6 +59,84 @@ internal class FlexPayClientTest {
     }
     val shopId = "60678"
     val client = FlexPayClient(shopId, secret, brand = Brand.VEROTEL)
+
+    @Test
+    fun `MCC raises exception if iDEAL is not used`() {
+        assertThatCode {
+            client.getPurchaseUrl(
+                priceAmount = BigDecimal("45.20"),
+                priceCurrency = SaleCurrency.EUR,
+                description = testDescription,
+                paymentMethod = PaymentMethod.CC,
+                mcc = "1144"
+            )
+        }
+            .hasMessage("MCC code and subCreditor can only be used with iDEAL payment method")
+            .isInstanceOf(WrongParameterCombinationException::class.java)
+    }
+
+    @Test
+    fun `Sub creditor raises exception if iDEAL is not used`() {
+        assertThatCode {
+            client.getPurchaseUrl(
+                priceAmount = BigDecimal("45.20"),
+                priceCurrency = SaleCurrency.EUR,
+                description = testDescription,
+                paymentMethod = PaymentMethod.CC,
+                subCreditor = SubCreditor(name = "Foo", id = "bar", country = "NL")
+            )
+        }
+            .hasMessage("MCC code and subCreditor can only be used with iDEAL payment method")
+            .isInstanceOf(WrongParameterCombinationException::class.java)
+    }
+
+    @Test
+    fun `Sub creditor country must be 2 letter country code`() {
+        assertThatCode {
+            client.getPurchaseUrl(
+                priceAmount = BigDecimal("45.20"),
+                priceCurrency = SaleCurrency.EUR,
+                description = testDescription,
+                paymentMethod = PaymentMethod.IDEAL,
+                subCreditor = SubCreditor(name = "Foo", id = "bar", country = "moo")
+            )
+        }
+            .hasMessage("Sub creditor country must be a 2-letter ISO 3166 country code")
+            .isInstanceOf(WrongParameterValueException::class.java)
+    }
+
+    @Test
+    fun `Sub creditor and MCC work with iDEAL`() {
+        assertThatCode {
+            val url = client.getPurchaseUrl(
+                priceAmount = BigDecimal("45.20"),
+                priceCurrency = SaleCurrency.EUR,
+                description = testDescription,
+                paymentMethod = PaymentMethod.IDEAL,
+                mcc = "1144",
+                subCreditor = SubCreditor(name = "Foo", id = "bar", country = "NL")
+            )
+            assertThat(url.query).contains("mcc")
+            assertThat(url.query).contains("subCreditorName")
+            assertThat(url.query).contains("subCreditorId")
+            assertThat(url.query).contains("subCreditorCountry")
+        }.doesNotThrowAnyException()
+
+        assertThatCode {
+            val url = client.purchaseBuilder()
+                .withAmount(BigDecimal("45.20"), SaleCurrency.EUR)
+                .withDescription(testDescription)
+                .withPaymentMethod(PaymentMethod.IDEAL)
+                .withMcc("1144")
+                .withSubCreditor(SubCreditor(name = "Foo", id = "bar", country = "NL"))
+                .build()
+            assertThat(url.query).contains("mcc")
+            assertThat(url.query).contains("subCreditorName")
+            assertThat(url.query).contains("subCreditorId")
+            assertThat(url.query).contains("subCreditorCountry")
+        }
+            .doesNotThrowAnyException()
+    }
 
     @Test
     fun `getSignature returns correct signature`() {
@@ -172,11 +251,11 @@ internal class FlexPayClientTest {
             .isEqualTo(
                 URL(
                     "https://secure.verotel.com/startorder?custom1=custom1+value&" +
-                        "name=My+D%C5%A1%C4%8D%C5%99%C4%8D%C5%99%C5%99%C4%9B%C5%99%C4%9B%26%3F%3Dblah123&period=P1M&" +
-                        "precedingSaleID=433456&priceAmount=0.00&priceCurrency=USD&shopID=60678&" +
-                        "subscriptionType=recurring&successURL=http%3A%2F%2FsuccessURL.test&trialAmount=0.01&" +
-                        "trialPeriod=P3D&type=upgradesubscription&" +
-                        "version=4&signature=cc4da94d214a4eb64a3f7affa3c39d168a9163c020f9caacca9bfd7498e33abc",
+                            "name=My+D%C5%A1%C4%8D%C5%99%C4%8D%C5%99%C5%99%C4%9B%C5%99%C4%9B%26%3F%3Dblah123&period=P1M&" +
+                            "precedingSaleID=433456&priceAmount=0.00&priceCurrency=USD&shopID=60678&" +
+                            "subscriptionType=recurring&successURL=http%3A%2F%2FsuccessURL.test&trialAmount=0.01&" +
+                            "trialPeriod=P3D&type=upgradesubscription&" +
+                            "version=4&signature=cc4da94d214a4eb64a3f7affa3c39d168a9163c020f9caacca9bfd7498e33abc",
                 )
             )
     }

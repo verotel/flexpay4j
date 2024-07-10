@@ -100,8 +100,16 @@ constructor(
         declineURL: String? = null,
         oneClickToken: String? = null,
         email: String? = null,
-        version: String = FLEXPAY_VERSION
+        mcc: String? = null,
+        subCreditor: SubCreditor? = null,
+        version: String = FLEXPAY_VERSION,
     ): URL {
+        if ((mcc != null || subCreditor != null) && paymentMethod != PaymentMethod.IDEAL) {
+            throw WrongParameterCombinationException(
+                "MCC code and subCreditor can only be used with iDEAL payment method"
+            )
+        }
+
         val purchaseParams = mutableMapOf<String, String>().apply {
             this[FlexPayRequestParameters.version.value] = version
             this[FlexPayRequestParameters.priceAmount.value] = priceAmount.toPlainString()
@@ -109,6 +117,10 @@ constructor(
 
             putIfNotNull(FlexPayRequestParameters.description.value, description)
             putIfNotNull(FlexPayRequestParameters.oneClickToken.value, oneClickToken)
+            putIfNotNull(FlexPayRequestParameters.mcc.value, mcc)
+            putIfNotNull(FlexPayRequestParameters.subCreditorName.value, subCreditor?.name)
+            putIfNotNull(FlexPayRequestParameters.subCreditorId.value, subCreditor?.id)
+            putIfNotNull(FlexPayRequestParameters.subCreditorCountry.value, subCreditor?.country)
 
             setCommonParams(
                 paymentMethod = paymentMethod,
@@ -362,7 +374,10 @@ constructor(
     /**
      * Generates signature of all params given
      */
-    private fun signature(flexPayParams: ParamsMap, algorithm: SignatureHashAlgorithm = SignatureHashAlgorithm.sha256): String {
+    private fun signature(
+        flexPayParams: ParamsMap,
+        algorithm: SignatureHashAlgorithm = SignatureHashAlgorithm.sha256
+    ): String {
         val signatureInput = flexPayParams
             .toMutableMap()
             .apply {
@@ -441,4 +456,25 @@ constructor(
     }
 }
 
-class FlexPayException(message: String) : Throwable(message)
+open class FlexPayException(message: String) : Throwable(message)
+class WrongParameterCombinationException(message: String) : FlexPayException(message)
+class WrongParameterValueException(message: String) : FlexPayException(message)
+
+data class SubCreditor(
+    val name: String,
+
+    val id: String,
+
+    /**
+     * 2-letter ISO 3166 country code
+     *
+     * For example NL, GB, US or DE
+     */
+    val country: String,
+) {
+    init {
+        if (country.length != 2) {
+            throw WrongParameterValueException("Sub creditor country must be a 2-letter ISO 3166 country code")
+        }
+    }
+}

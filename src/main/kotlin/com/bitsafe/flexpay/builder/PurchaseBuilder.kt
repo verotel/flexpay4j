@@ -2,6 +2,7 @@ package com.bitsafe.flexpay.builder
 
 import com.bitsafe.flexpay.FLEXPAY_VERSION
 import com.bitsafe.flexpay.FlexPayClient
+import com.bitsafe.flexpay.SubCreditor
 import com.bitsafe.flexpay.enums.PaymentMethod
 import com.bitsafe.flexpay.enums.SaleCurrency
 import java.math.BigDecimal
@@ -20,6 +21,8 @@ class PurchaseBuilder(private val flexpay: FlexPayClient) {
     private var declineURL: String? = null
     private var oneClickToken: String? = null
     private var email: String? = null
+    private var mcc: String? = null
+    private var subCreditor: SubCreditor? = null
     private var version: String = FLEXPAY_VERSION
 
     fun withAmount(withAmount: BigDecimal, withCurrency: SaleCurrency): PurchaseBuilder {
@@ -93,6 +96,18 @@ class PurchaseBuilder(private val flexpay: FlexPayClient) {
         return this
     }
 
+    fun withMcc(withMcc: String): PurchaseBuilder {
+        mcc = withMcc
+
+        return this
+    }
+
+    fun withSubCreditor(withSubCreditor: SubCreditor): PurchaseBuilder {
+        subCreditor = withSubCreditor
+
+        return this
+    }
+
     fun withVersion(withVersion: String): PurchaseBuilder {
         version = withVersion
 
@@ -113,6 +128,8 @@ class PurchaseBuilder(private val flexpay: FlexPayClient) {
             declineURL = declineURL,
             oneClickToken = oneClickToken,
             email = email,
+            mcc = mcc,
+            subCreditor = subCreditor,
             version = version,
         )
     }

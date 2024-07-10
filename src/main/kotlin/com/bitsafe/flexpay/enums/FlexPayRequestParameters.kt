@@ -25,7 +25,11 @@ enum class FlexPayRequestParameters(val isSigned: Boolean, val flexPayName: Stri
     upgradeOption(isSigned = true),
     signature(isSigned = false),
     email(isSigned = false),
-    oneClickToken(isSigned = false);
+    oneClickToken(isSigned = false),
+    mcc(isSigned = true),
+    subCreditorName(isSigned = true),
+    subCreditorId(isSigned = true),
+    subCreditorCountry(isSigned = true);
 
     val value = flexPayName ?: name
 }
