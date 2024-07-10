@@ -21,7 +21,7 @@ This package is hosted in the [Maven central repository](https://search.maven.or
 Gradle:
 
 ```kotlin
-implementation("com.verotel:flexpay4j:2.1.0")
+implementation("com.verotel:flexpay4j:2.2.0")
 ```
 
 Maven:
@@ -30,7 +30,7 @@ Maven:
 <dependency>
     <groupId>com.verotel</groupId>
     <artifactId>flexpay4j</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
