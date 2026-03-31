@@ -392,7 +392,7 @@ constructor(
             .toByteArray()
         val digest = MessageDigest.getInstance(algorithm.name).digest(signatureInput)
 
-        return HexFormat.of().formatHex(digest).lowercase()
+        return digest.joinToString("") { "%02x".format(it) }
     }
 
     /**
