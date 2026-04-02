@@ -13,6 +13,11 @@ plugins {
 group = "com.verotel"
 version = "2.2.1"
 
+val sonatypeUsername = providers.gradleProperty("sonatypeUsername")
+    .orElse(providers.environmentVariable("SONATYPE_USERNAME"))
+val sonatypePassword = providers.gradleProperty("sonatypePassword")
+    .orElse(providers.environmentVariable("SONATYPE_PASSWORD"))
+
 repositories {
     mavenCentral()
 }
@@ -70,8 +75,8 @@ publishing {
             name = "central"
             url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
             credentials {
-                username = findProperty("sonatypeUsername") as String
-                password = findProperty("sonatypePassword") as String
+                username = sonatypeUsername.orNull
+                password = sonatypePassword.orNull
             }
         }
     }
@@ -93,9 +98,9 @@ val uploadCentralDeployment by tasks.registering {
     description = "Uploads the staged deployment from the OSSRH compatibility API to Sonatype Central."
 
     doLast {
-        val username = findProperty("sonatypeUsername") as String?
+        val username = sonatypeUsername.orNull
             ?: error("Missing Gradle property 'sonatypeUsername'.")
-        val password = findProperty("sonatypePassword") as String?
+        val password = sonatypePassword.orNull
             ?: error("Missing Gradle property 'sonatypePassword'.")
 
         val authToken = Base64.getEncoder()
