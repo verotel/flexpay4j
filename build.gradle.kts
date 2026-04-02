@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.HttpURLConnection
 import java.net.URI
+import java.util.Base64
 
 plugins {
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "1.9.24"
     `java-library`
     `maven-publish`
     signing
@@ -47,6 +49,14 @@ publishing {
                         url.set("https://opensource.org/licenses/MIT")
                     }
                 }
+                developers {
+                    developer {
+                        id.set("verotel")
+                        name.set("Verotel")
+                        organization.set("Verotel")
+                        organizationUrl.set("https://www.verotel.com")
+                    }
+                }
                 scm {
                     connection.set("https://github.com/verotel/flexpay4j.git")
                     url.set("https://github.com/verotel/flexpay4j")
@@ -57,10 +67,11 @@ publishing {
     }
     repositories {
         maven {
-            url = URI("https://s01.oss.sonatype.org/content/repositories/releases/")
+            name = "central"
+            url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
             credentials {
-                username = findProperty("ossrhToken") as String
-                password = findProperty("ossrhTokenPassword") as String
+                username = findProperty("sonatypeUsername") as String
+                password = findProperty("sonatypePassword") as String
             }
         }
     }
@@ -72,6 +83,50 @@ java {
 }
 
 signing {
-    sign(configurations.archives.get())
     sign(publishing.publications["mavenJava"])
+}
+
+val sonatypeNamespace = "com.verotel"
+
+val uploadCentralDeployment by tasks.registering {
+    group = "publishing"
+    description = "Uploads the staged deployment from the OSSRH compatibility API to Sonatype Central."
+
+    doLast {
+        val username = findProperty("sonatypeUsername") as String?
+            ?: error("Missing Gradle property 'sonatypeUsername'.")
+        val password = findProperty("sonatypePassword") as String?
+            ?: error("Missing Gradle property 'sonatypePassword'.")
+
+        val authToken = Base64.getEncoder()
+            .encodeToString("$username:$password".toByteArray(Charsets.UTF_8))
+        val endpoint = URI(
+            "https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/" +
+                sonatypeNamespace +
+                "?publishing_type=automatic"
+        ).toURL()
+        val connection = endpoint.openConnection() as HttpURLConnection
+
+        connection.requestMethod = "POST"
+        connection.setRequestProperty("Authorization", "Bearer $authToken")
+        connection.setRequestProperty("Content-Type", "application/json")
+        connection.doOutput = true
+
+        connection.outputStream.use { }
+
+        val responseCode = connection.responseCode
+        if (responseCode !in 200..299) {
+            val errorBody = runCatching {
+                connection.errorStream?.bufferedReader()?.use { it.readText() }
+            }.getOrNull()
+            error(
+                "Central upload handoff failed with HTTP $responseCode" +
+                    if (errorBody.isNullOrBlank()) "." else ": $errorBody"
+            )
+        }
+    }
+}
+
+tasks.named("publish") {
+    finalizedBy(uploadCentralDeployment)
 }
