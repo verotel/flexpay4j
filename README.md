@@ -21,7 +21,7 @@ This package is hosted in the [Maven central repository](https://search.maven.or
 Gradle:
 
 ```kotlin
-implementation("com.verotel:flexpay4j:2.2.0")
+implementation("com.verotel:flexpay4j:2.3.0")
 ```
 
 Maven:
@@ -30,7 +30,7 @@ Maven:
 <dependency>
     <groupId>com.verotel</groupId>
     <artifactId>flexpay4j</artifactId>
-    <version>2.2.1</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 
@@ -65,6 +65,10 @@ val purchaseUrl = flexPayClient.purchaseBuilder()
 ```
 
 ## Changelog
+### Version 2.3.0 (Jul 2026)
+ - Added support for Yoursafe Pay brand
+### Version 2.2.1 (Mar 2026)
+ - Java 11 compatibility fixes
 ### Version 2.0.0 (Feb 2024)
  - Parameter `backURL` has been renamed to `successURL`, along with the corresponding methods:
    - Simply change calls of `.withBackURL(...)` to the new `.withSuccessURL(...)`

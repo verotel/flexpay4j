@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.verotel"
-version = "2.2.1"
+version = "2.3.0"
 
 val sonatypeUsername = providers.gradleProperty("sonatypeUsername")
     .orElse(providers.environmentVariable("SONATYPE_USERNAME"))

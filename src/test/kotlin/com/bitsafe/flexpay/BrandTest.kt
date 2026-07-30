@@ -55,6 +55,13 @@ class BrandTest {
     }
 
     @Test
+    fun `create from merchant id YoursafePay brand`() {
+        val brand = Brand.fromMerchantId("9147")
+        assertThat(brand).isInstanceOf(Brand.YOURSAFE_PAY::class.java)
+        assertThat(brand.BASE_URL).isEqualTo("https://secure.yoursafe.com")
+    }
+
+    @Test
     fun `create from merchant id - unknown brand`() {
         assertThatThrownBy {
             Brand.fromMerchantId("1234000000000000")

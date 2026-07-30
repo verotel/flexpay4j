@@ -9,7 +9,8 @@ enum class Brand(val BASE_URL: String) {
     GAYCHARGE("https://secure.gaycharge.com"),
     PAINTFEST("https://secure.paintfestpayments.com"),
     BILL("https://secure.bill.creditcard"),
-    YOURSAFE_DIRECT("https://secure.yoursafedirect.com");
+    YOURSAFE_DIRECT("https://secure.yoursafedirect.com"),
+    YOURSAFE_PAY("https://secure.yoursafe.com");
 
     companion object {
         private val brandByMerchantPrefix = mapOf(
@@ -20,6 +21,7 @@ enum class Brand(val BASE_URL: String) {
             "9444" to PAINTFEST,
             "9388" to GAYCHARGE,
             "9001" to YOURSAFE_DIRECT,
+            "9147" to YOURSAFE_PAY,
         )
 
         fun fromMerchantId(merchantID: String): Brand {
